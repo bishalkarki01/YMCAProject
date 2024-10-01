@@ -1,0 +1,97 @@
+.left {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    float: left; 
+    width: 60%;
+    background-color: white;
+    height: 100vh;
+}
+
+.right {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    float: right;
+    width: 40%;
+    background: #135899;
+    height: 100vh;
+    outline: 10px solid #135899;
+}
+
+.title {
+    text-align: center;
+    margin: 0 0 -10px 0;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.newHere {
+    text-align: center;
+    margin: -75px 0 0 0;
+    color: white;
+}
+
+.subtitle {
+    margin-top: 25px;
+    text-align: center;
+}
+
+.instructions {
+    color: white;
+}
+
+.textbox {
+    width: 70%;
+    margin: 10px;
+}
+#password{
+    width: 100%;
+
+}
+
+input[type="text"] {
+    width: 100%;
+    border: 2px grey solid;
+    padding: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px; 
+    border: 1px solid #cfd8dc; 
+    border-radius: 4px; 
+}
+
+input[type="password"] {
+    width: 100%;
+    border: 2px grey solid;
+    padding: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px; 
+    border: 1px solid #cfd8dc; 
+    border-radius: 4px; 
+}
+
+
+
+  /* Button styling */
+  .btn-login, .btn-register {
+    background-color: #135899;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    text-align: center;
+  }
+  
+  .btn-register {
+    background-color: white;
+    color:black
+  }
+  
+  .btn-login:hover, .btn-register:hover {
+    opacity: 0.8;
+  }
+  

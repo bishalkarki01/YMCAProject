@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f6f8;
+  font-family: 'Poppins', sans-serif;
+}
+
+.register-card {
+  background: #135899;
+  padding: 2em;
+  border-radius: 8px;
+  align-items: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px;
+}
+
+.form-control {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    width: 45%; 
+  }
+
+.register-card h2 {
+  text-align: center;
+  margin-bottom: 1em;
+  color: white;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1em;
+}
+
+.form-control {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  margin-right: 5px;
+  width: 45%; 
+}
+
+.full-width {
+  width: 100%;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1em;
+  margin-right: 0.5em;
+}
+
+.btn-primary {
+  background-color:white;
+  color:black;
+}
+
+.btn-cancel {
+  background-color: #6c757d;
+  color: white;
+}
+
+.error {
+  color: white;
+  margin-bottom: 10px;
+  size: 24px;
+  text-align: center;
+  background-color: red;
+}
