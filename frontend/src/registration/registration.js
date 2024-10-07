@@ -6,6 +6,7 @@ import InputMask from "react-input-mask";
 import { Link, useNavigate } from "react-router-dom";
 import "./registration.css";
 
+
 function RegistrationPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
