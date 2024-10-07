@@ -2,16 +2,14 @@
 
 import axios from "axios";
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate hook
+import { Link, useNavigate } from "react-router-dom";
 import "./login.css";
-
-// Member, Staff and AMDIN login page
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate(); // Declare the useNavigate hook
+  const navigate = useNavigate();
 
   const emailLogin = (event) => {
     setEmail(event.target.value);
@@ -27,9 +25,20 @@ function LoginPage() {
         email,
         password,
       });
+
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);
-        navigate("/home"); // Use navigate to programmatically redirect to /home
+        localStorage.setItem("role", response.data.role);
+        localStorage.setItem("isMember", response.data.isMember);
+        localStorage.setItem("userId", response.data.userId);
+        localStorage.setItem("firstName", response.data.firstName);
+
+        // Check the role of the user and navigate accordingly
+        if (response.data.role === "admin") {
+          navigate("/adminDashboard");
+        } else if (response.data.role === "participant") {
+          navigate("/userDashboard");
+        }
       }
     } catch (error) {
       setErrorMessage(error.response?.data?.message || "Login failed");
