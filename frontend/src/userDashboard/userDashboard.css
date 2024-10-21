@@ -1,0 +1,203 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+.user-dashboard {
+  font-family: 'Poppins', sans-serif;
+  padding: 20px;
+  background-color: #f0f2f5;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between; 
+  align-items: center; 
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 24px; 
+  font-weight: 600; /* Making the header bold using Poppins' weight */
+}
+
+.logout-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 14px; 
+  font-family: 'Poppins', sans-serif;
+}
+
+.logout-btn:hover {
+  background-color: #d32f2f;
+}
+
+.content {
+  margin-top: 20px;
+}
+
+.content h2 {
+  margin-bottom: 0px;
+  font-size: 20px; 
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+}
+
+.content ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.content ul li {
+  padding: 10px;
+  background-color: #fff;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+}
+
+.footer {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 14px;
+  color: #777;
+  font-family: 'Poppins', sans-serif;
+}
+
+.footer p {
+  margin: 0;
+}
+
+.program-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
+
+.program-card {
+  border: 1px solid #ccc;
+  padding: 15px;
+  display: flex;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.program-card:hover {
+  transform: scale(1.05);
+}
+
+.program-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.program-image {
+  max-width: 150px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.program-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.register-button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color:  #0056b3;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+}
+
+.register-button:hover {
+  background-color: #0056b3;
+}
+
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Dim background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Modal Title */
+.modal-content h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+/* Modal Text */
+.modal-content p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+/* Button Container */
+.pike-level-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+/* Yes/No Buttons */
+.pike-level-buttons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+/* Yes Button */
+.pike-level-buttons .yes-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.pike-level-buttons .yes-btn:hover {
+  background-color: #218838;
+}
+
+/* No Button */
+.pike-level-buttons .no-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.pike-level-buttons .no-btn:hover {
+  background-color: #c82333;
+}
+

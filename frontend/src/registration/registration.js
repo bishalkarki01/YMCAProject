@@ -28,7 +28,7 @@ function RegistrationPage() {
     // Check if passwords match
     if (newPassword !== confirmPassword) {
       setErrorMessage("Passwords do not match!"); // Show error if passwords don't match
-      return; // Prevent form submission
+      return;
     }
 
     const userData = {

@@ -3,6 +3,7 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const authenticateToken = require("../middleware/authMiddleware");
 
 // Import the User model
 const User = require("../models/User");
@@ -60,27 +61,58 @@ router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Check if the user exists
+    // Find user by email
     const user = await User.findOne({ email });
+
+    // If the user is not found
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // Compare the hashed password with the entered password
+    // Compare the entered password with the hashed password in the database
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res.status(401).json({ message: "Invalid email or password" });
     }
+    // If the password is correct, generate a token (assuming JWT)
+    const token = generateAuthToken(user);
 
-    // Generate a JWT token
-    const token = jwt.sign({ userId: user._id }, "secretKey", {
-      expiresIn: "1h",
+    // Return token and role in the response
+    res.json({
+      token,
+      role: user.userType,
+      userId: user._id,
+      firstName: user.firstName,
     });
-
-    res.status(200).json({ token, message: "Login successful" });
   } catch (error) {
-    console.error("Error logging in:", error);
+    console.error(error);
     res.status(500).json({ message: "Server error" });
+  }
+});
+
+function generateAuthToken(user) {
+  const token = jwt.sign(
+    {
+      _id: user._id,
+      role: user.userType,
+      isMember: user.member,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" }
+  );
+  return token;
+}
+
+router.get("/user/member-status", authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.json({ isMember: user.member });
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
