@@ -1,0 +1,75 @@
+/* modal.css */
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  h2 {
+    margin-top: 0;
+  }
+  
+  .confirm-registration-btn,
+  .close-modal-btn {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .confirm-registration-btn {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .close-modal-btn {
+    background-color: #dc3545;
+    color: white;
+    margin-left: 10px;
+  }
+  
+  .close-modal-btn:hover,
+  .confirm-registration-btn:hover {
+    opacity: 0.8;
+  }
+  
+  /* modal.css */
+
+.error-message {
+    color: red;
+    margin-top: 10px;
+  }
+  
+  .confirm-registration-btn {
+    background-color: #28a745;
+    color: white;
+    margin-right: 10px;
+  }
+  
+  .confirm-registration-btn:disabled {
+    background-color: #ccc;
+  }
+  
+  .close-modal-btn {
+    background-color: #dc3545;
+    color: white;
+  }
+  

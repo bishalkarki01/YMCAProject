@@ -9,15 +9,12 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [verificationModal, setVerificationModal] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
   const navigate = useNavigate();
 
-  const emailLogin = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const passwordLogin = (event) => {
-    setPassword(event.target.value);
-  };
+  const emailLogin = (event) => setEmail(event.target.value);
+  const passwordLogin = (event) => setPassword(event.target.value);
 
   const handleLogin = async () => {
     try {
@@ -27,13 +24,14 @@ function LoginPage() {
       });
 
       if (response.data.token) {
+        // Save user details and token in localStorage
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("role", response.data.role);
         localStorage.setItem("isMember", response.data.isMember);
         localStorage.setItem("userId", response.data.userId);
         localStorage.setItem("firstName", response.data.firstName);
 
-        // Check the role of the user and navigate accordingly
+        // Navigate based on the role
         if (response.data.role === "admin") {
           navigate("/adminDashboard");
         } else if (response.data.role === "participant") {
@@ -41,7 +39,36 @@ function LoginPage() {
         }
       }
     } catch (error) {
-      setErrorMessage(error.response?.data?.message || "Login failed");
+      if (error.response && error.response.status === 403) {
+        // User found in TemporaryUser - open the verification modal
+        setVerificationModal(true);
+        setErrorMessage(
+          "Email not verified. A verification code has been sent to your email."
+        );
+      } else {
+        setErrorMessage(error.response?.data?.message || "Login failed");
+      }
+    }
+  };
+
+  // Handler for verifying the code entered in the modal
+  const handleVerifyCode = async () => {
+    try {
+      const response = await axios.post("http://localhost:5001/verify", {
+        email,
+        code: verificationCode,
+      });
+
+      if (response.data.success) {
+        alert("Email verified and registration complete.");
+        setVerificationModal(false);
+        setErrorMessage("");
+        await handleLogin();
+      } else {
+        setErrorMessage("Invalid verification code.");
+      }
+    } catch (error) {
+      setErrorMessage("Verification failed. Please try again.");
     }
   };
 
@@ -83,6 +110,33 @@ function LoginPage() {
           </button>
         </Link>
       </div>
+
+      {/* Verification Modal */}
+      {verificationModal && (
+        <div className="verification-modal">
+          <div className="verification-card">
+            <h3>Verify Your Email</h3>
+            <p>Enter the code sent to {email}</p>
+            <input
+              type="text"
+              value={verificationCode}
+              onChange={(e) => setVerificationCode(e.target.value)}
+              placeholder="Verification Code"
+              required
+            />
+            <div className="row">
+              <button onClick={handleVerifyCode} className="btn btn-verify">
+                Verify
+              </button>
+              <button
+                onClick={() => setVerificationModal(false)}
+                className="btn btn-cancel">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

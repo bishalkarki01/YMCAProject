@@ -12,6 +12,9 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     userType: { type: String, required: true },
     member: { type: Boolean, default: false },
+    isVerified: { type: Boolean, default: false }, // New field to mark email verification status
+    verificationCode: { type: String }, // Optional, for storing verification code (if needed in the User model)
+    verificationExpires: { type: Date }, // Optional, for expiry date of verification code
   },
   { timestamps: true }
 );

@@ -16,19 +16,20 @@ function RegistrationPage() {
   const [phone, setPhone] = useState("");
   const [newEmail, setEmail] = useState("");
   const [newPassword, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); // New state for confirm password
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isMember, setIsMember] = useState(false);
+  const [verificationModal, setVerificationModal] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setErrorMessage("");
 
-    // Check if passwords match
     if (newPassword !== confirmPassword) {
-      setErrorMessage("Passwords do not match!"); // Show error if passwords don't match
-      return; // Prevent form submission
+      setErrorMessage("Passwords do not match!");
+      return;
     }
 
     const userData = {
@@ -47,13 +48,35 @@ function RegistrationPage() {
         "http://localhost:5001/register",
         userData
       );
-      navigate("/login");
-    } catch (error) {
-      if (error.response && error.response.status === 400) {
-        setErrorMessage(error.response.data.error);
-      } else {
-        setErrorMessage("Please fill the form completely");
+      if (response.data.success) {
+        setVerificationModal(true); // Show the verification modal
       }
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage("Registration failed. Please try again.");
+      }
+    }
+  };
+
+  // Handle verification code submission
+  const handleVerifyCode = async () => {
+    try {
+      const response = await axios.post("http://localhost:5001/verify", {
+        email: newEmail,
+        code: verificationCode,
+      });
+
+      if (response.data.success) {
+        alert("Email verified and registration complete.");
+        setVerificationModal(false); // Close the verification modal
+        navigate("/login"); // Redirect to login
+      } else {
+        setErrorMessage("Invalid verification code.");
+      }
+    } catch (error) {
+      setErrorMessage("Verification failed. Please try again.");
     }
   };
 
@@ -70,6 +93,7 @@ function RegistrationPage() {
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               placeholder="First Name"
+              required
             />
             <input
               type="text"
@@ -77,9 +101,9 @@ function RegistrationPage() {
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               placeholder="Last Name"
+              required
             />
           </div>
-          {/* Address Row */}
           <div className="row">
             <input
               type="text"
@@ -88,6 +112,7 @@ function RegistrationPage() {
               value={street}
               onChange={(e) => setStreet(e.target.value)}
               placeholder="Street Address"
+              required
             />
             <input
               type="text"
@@ -96,6 +121,7 @@ function RegistrationPage() {
               value={city}
               onChange={(e) => setCity(e.target.value)}
               placeholder="City"
+              required
             />
             <input
               type="text"
@@ -104,6 +130,7 @@ function RegistrationPage() {
               value={state}
               onChange={(e) => setState(e.target.value)}
               placeholder="State"
+              required
             />
             <InputMask
               mask="99999"
@@ -112,6 +139,7 @@ function RegistrationPage() {
               value={zip}
               onChange={(e) => setZip(e.target.value)}
               placeholder="ZIP Code"
+              required
             />
           </div>
           <div className="row">
@@ -121,6 +149,7 @@ function RegistrationPage() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="Phone Number"
+              required
             />
             <input
               type="email"
@@ -128,9 +157,9 @@ function RegistrationPage() {
               value={newEmail}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Email Address"
+              required
             />
           </div>
-          {/* Password and Confirm Password Row */}
           <div className="row">
             <input
               type="password"
@@ -139,6 +168,7 @@ function RegistrationPage() {
               value={newPassword}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
+              required
             />
             <input
               type="password"
@@ -147,6 +177,7 @@ function RegistrationPage() {
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Confirm Password"
+              required
             />
           </div>
           <div className="row">
@@ -171,6 +202,33 @@ function RegistrationPage() {
           </div>
         </div>
       </form>
+
+      {/* Verification Modal */}
+      {verificationModal && (
+        <div className="verification-modal">
+          <div className="verification-card">
+            <h3>Verify Your Email</h3>
+            <p>Enter the code sent to {newEmail}</p>
+            <input
+              type="text"
+              value={verificationCode}
+              onChange={(e) => setVerificationCode(e.target.value)}
+              placeholder="Verification Code"
+              required
+            />
+            <div className="row">
+              <button onClick={handleVerifyCode} className="btn btn-verify">
+                Verify
+              </button>
+              <button
+                onClick={() => setVerificationModal(false)}
+                className="btn btn-cancel">
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

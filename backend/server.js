@@ -7,20 +7,19 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const app = express();
+require("dotenv").config();
+const connectDB = require("./config/db");
 
 const userRoutes = require("../backend/routes/userRoutes");
+const programRoutes = require("./routes/programRoutes");
+
+connectDB();
 app.use(
   cors({
     origin: "http://localhost:3000",
   })
 );
 app.use(bodyParser.json());
-
-// MongoDB connection
-mongoose.connect("mongodb://localhost:27017/YMCA-Project", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
@@ -30,6 +29,7 @@ db.once("open", () => {
 
 // Use the user routes
 app.use("/", userRoutes);
+app.use("/program", programRoutes);
 
 // Start the server
 const PORT = 5001;
