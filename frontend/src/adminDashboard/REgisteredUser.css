@@ -1,3 +1,12 @@
+/**
+ * Author : Bishal Karki // Isabella Breuhl 
+ * Discription:CSS file for registered user 
+ * Created : 13 November 2024
+ * Last Modifies: 4  December 2024
+ *
+ * 
+ */
+
 .user-table {
     width: 100%;
     border-collapse: collapse;
@@ -29,4 +38,6 @@
   }
   
 
-  
+  .search-input{
+    width: 80%;
+  }

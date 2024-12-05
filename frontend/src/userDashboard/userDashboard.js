@@ -1,4 +1,11 @@
-/** @format */
+/**
+ * Author : Bishal Karki // Isabella Breuhl 
+ * Discription: Home page which can be seen by user after successful login 
+ * Created : 13 November 2024
+ * Last Modifies: 4  December 2024
+ *
+ * 
+ */
 
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +23,7 @@ const UserDashboard = () => {
   const [error, setError] = useState(null);
   const [isMember, setIsMember] = useState(false);
   const [notifications, setNotifications] = useState([]);
-  const [showNotifications, setShowNotifications] = useState(false); // For notification dropdown
+  const [showNotifications, setShowNotifications] = useState(false);
 
   const role = localStorage.getItem("role");
   const token = localStorage.getItem("token");

@@ -1,4 +1,11 @@
-/** @format */
+/**
+ * Author : Bishal Karki // Isabella Breuhl 
+ * Discription:List of program list
+ * Created : 13 November 2024
+ * Last Modifies: 4  December 2024
+ *
+ * 
+ */
 
 import React from "react";
 

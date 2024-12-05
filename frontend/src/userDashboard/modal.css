@@ -1,5 +1,11 @@
-/* modal.css */
-
+/**
+ * Author : Bishal Karki // Isabella Breuhl 
+ * Discription:CSS for modal dispaly
+ * Created : 13 November 2024
+ * Last Modifies: 4  December 2024
+ *
+ * 
+ */
 .modal-overlay {
     position: fixed;
     top: 0;

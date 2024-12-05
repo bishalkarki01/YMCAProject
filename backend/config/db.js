@@ -1,4 +1,13 @@
-const mongoose = require('mongoose');
+/**
+ * Author : Bishal Karki
+ * Discription: Database connection
+ * Created : 1 October 2024
+ * Last Modifies: 1 October 2024
+ *
+ * 
+ */
+
+const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
@@ -14,4 +23,3 @@ const connectDB = async () => {
 };
 
 module.exports = connectDB;
-

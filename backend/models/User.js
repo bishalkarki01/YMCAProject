@@ -1,4 +1,11 @@
-/** @format */
+/**
+ * Author : Bishal Karki
+ * Discription: Temporary user is used for the verification purpose of the user registration.
+ * Created : 1 October 2024
+ * Last Modified : 20 Novermber 2024
+ *
+ * 
+ */
 
 const mongoose = require("mongoose");
 
@@ -12,9 +19,9 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     userType: { type: String, required: true },
     member: { type: Boolean, default: false },
-    isVerified: { type: Boolean, default: false }, // New field to mark email verification status
-    verificationCode: { type: String }, // Optional, for storing verification code (if needed in the User model)
-    verificationExpires: { type: Date }, // Optional, for expiry date of verification code
+    isVerified: { type: Boolean, default: true },
+    verificationCode: { type: String },
+    verificationExpires: { type: Date },
   },
   { timestamps: true }
 );

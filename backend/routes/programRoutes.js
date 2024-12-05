@@ -1,4 +1,11 @@
-/** @format */
+/**
+ * Author : Bishal Karki
+ * Discription: Routes for program  related task
+ * Created : 13 October 2024
+ * Last Modified : 20 Novermber 2024
+ *
+ * 
+ */
 
 const express = require("express");
 const router = express.Router();
@@ -77,13 +84,11 @@ router.get("/", async (req, res) => {
         });
 
         return {
-          ...program._doc, // Spread original program document fields
-          activeRegistrations: activeRegistrationsCount, // Add active registration count
+          ...program._doc,
+          activeRegistrations: activeRegistrationsCount,
         };
       })
     );
-
-    // Return programs with active registration counts
     res.status(200).json(programsWithActiveRegistrations);
   } catch (error) {
     console.error("Error fetching programs:", error);
@@ -124,7 +129,7 @@ router.delete("/:id", async (req, res) => {
 
 //Register Program by user
 router.post("/registeredProgram", async (req, res) => {
-  const { userId, programId } = req.body;
+  const { userId, programId, parentEmail } = req.body;
 
   try {
     // Check if the user is already actively registered for the program
@@ -154,7 +159,7 @@ router.post("/registeredProgram", async (req, res) => {
       });
     }
 
-    // Check if the program has available seats (only counting active registrations)
+    // Check if the program has available seats
     const activeRegistrations = await RegisteredUser.countDocuments({
       programId,
       activeStatus: true,
@@ -167,10 +172,31 @@ router.post("/registeredProgram", async (req, res) => {
       });
     }
 
+    // Check for any time and day overlap with other registered programs
+    const userPrograms = await RegisteredUser.find({
+      userId,
+      activeStatus: true,
+    }).populate("programId");
+
+    const conflict = userPrograms.some((regProgram) => {
+      return (
+        regProgram.programId.startTime === program.startTime &&
+        regProgram.programId.days.some((day) => program.days.includes(day))
+      );
+    });
+
+    if (conflict) {
+      return res.status(400).json({
+        message:
+          "You are already registered for another program with an overlapping schedule.",
+      });
+    }
+
     // Register the user if all checks pass
     const newRegistration = new RegisteredUser({
       userId,
       programId,
+      parentEmail,
       registrationDate: new Date(),
       activeStatus: true,
     });
@@ -191,31 +217,32 @@ router.get("/registeredPrograms/:userId", async (req, res) => {
   const { userId } = req.params;
 
   try {
-    // Fetch registered programs for the user from the RegisteredUser collection
     const registeredUsers = await RegisteredUser.find({
       userId: userId,
-      activeStatus: true, // Only fetch active registrations
-    }).populate("programId"); // Populate program details
+      activeStatus: true,
+    })
+      .populate("programId")
+      .populate("userId", "email");
 
     if (registeredUsers.length === 0) {
       return res
         .status(404)
         .json({ message: "No registered programs found for this user." });
     }
-
-    // Format the response to merge RegisteredUser and Program data
     const mergedPrograms = registeredUsers.map((regUser) => {
       const program = regUser.programId;
+      const user = regUser.userId;
 
       return {
         _id: program._id,
         programName: program.programName,
         startDate: program.startDate,
+        email: user.email,
         endDate: program.endDate,
         activeStatus: regUser.activeStatus,
         registrationDate: regUser.registrationDate,
         participants: program.participants,
-        remainingSeats: program.participants - registeredUsers.length, // Calculating remaining seats
+        remainingSeats: program.participants - registeredUsers.length,
       };
     });
 
@@ -234,10 +261,9 @@ router.put("/cancelRegistration/:userId/:programId", async (req, res) => {
   const { userId, programId } = req.params;
 
   try {
-    // Update only the RegisteredUser table by setting activeStatus to false
     const updatedRegistration = await RegisteredUser.findOneAndUpdate(
-      { userId, programId, activeStatus: true }, // Find the active registration
-      { activeStatus: false }, // Set activeStatus to false
+      { userId, programId, activeStatus: true },
+      { activeStatus: false },
       { new: true }
     );
 
@@ -252,16 +278,20 @@ router.put("/cancelRegistration/:userId/:programId", async (req, res) => {
   }
 });
 
+
+//User details for registered for specific program
 router.get("/users", async (req, res) => {
   try {
     const users = await RegisteredUser.find()
       .populate("userId", "firstName lastName email")
-      .populate("programId", "programName");
+      .populate("programId", "programName startDate endDate");
 
     const response = users.map((registeredUser) => ({
       _id: registeredUser._id,
       name: `${registeredUser.userId.firstName} ${registeredUser.userId.lastName}`,
       email: registeredUser.userId.email,
+      startDate: registeredUser.programId.startDate,
+      endDate: registeredUser.programId.endDate,
       programName: registeredUser.programId.programName,
       status: registeredUser.activeStatus,
     }));
@@ -284,17 +314,13 @@ router.put("/user/status/:id", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // If status is already true and we're trying to set it to true again, deny the update
     if (userToUpdate.activeStatus === true && status === true) {
       return res.status(400).json({
         message:
           "This user is already active in this program. Cannot update status.",
       });
     }
-
-    // If status is being updated to true (active)
     if (status === true) {
-      // Check if another user is already active in the same program
       const activeUser = await RegisteredUser.findOne({
         programId: userToUpdate.programId,
         activeStatus: true,
@@ -302,15 +328,12 @@ router.put("/user/status/:id", async (req, res) => {
       });
 
       if (activeUser) {
-        // If an active user is found for the same program, deny the update
         return res.status(400).json({
           message:
-            "Another user is already active for this program. Cannot set this user as active.",
+            "User is already active for this program. Cannot set this user as active.",
         });
       }
     }
-
-    // Proceed with the status update
     userToUpdate.activeStatus = status;
     await userToUpdate.save();
 
@@ -329,6 +352,7 @@ router.get("/prgramlists", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
 
 // Endpoint to send notice to enrolled users
 router.post("/:programId/sendNotice", async (req, res) => {
@@ -356,8 +380,6 @@ router.post("/:programId/sendNotice", async (req, res) => {
         message: "Program not found.",
       });
     }
-
-    // Create a new notice with expiration date and associate with enrolled users
     const notice = new Notice({
       programId,
       noticeText,
@@ -367,7 +389,6 @@ router.post("/:programId/sendNotice", async (req, res) => {
 
     await notice.save();
 
-    // Send email notifications to each active enrolled user with only the noticeText
     registeredUsers.forEach(async (registration) => {
       const user = registration.userId;
 
@@ -425,20 +446,82 @@ router.get("/:userId/notifications", async (req, res) => {
     if (programIds.length === 0) {
       return res.json([]);
     }
-
-    // Find all notifications for enrolled programs that haven't expired
     const notifications = await Notice.find({
       programId: { $in: programIds },
       expirationDate: { $gte: new Date() },
     }).populate("programId", "programName");
-
-    // Return all active (non-expired) notifications to the frontend
     res.json(notifications);
   } catch (error) {
     console.error("Error fetching notifications:", error);
     res
       .status(500)
       .json({ success: false, message: "Failed to fetch notifications." });
+  }
+});
+
+// Fetch registered programs where userEmail matches parentEmail
+router.get("/familyPrograms", async (req, res) => {
+  const { parentEmail } = req.query;
+  if (!parentEmail) {
+    return res.status(400).json({ message: "Parent email is required." });
+  }
+
+  try {
+    // Fetch the user based on the parentEmail
+    const user = await User.findById(parentEmail).select(
+      "email firstName lastName"
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    const email = user.email;
+
+    // Check if the parentEmail exists in the RegisteredUser collection
+    const parentEmailExists = await RegisteredUser.exists({
+      parentEmail: email,
+    });
+
+    if (!parentEmailExists) {
+      return res.status(404).json({
+        message: `No family programs found for parentEmail: ${email}.`,
+      });
+    }
+
+    // Fetch registered users where parentEmail matches and populate details
+    const registeredUsers = await RegisteredUser.find({
+      parentEmail: email,
+      activeStatus: true,
+    })
+      .populate("programId") 
+      .populate("userId", "email firstName lastName");
+
+    if (registeredUsers.length === 0) {
+      return res.status(404).json({
+        message: `No registered programs found for family members with parentEmail: ${email}.`,
+      });
+    }
+    const mergedPrograms = registeredUsers.map((regUser) => {
+      const program = regUser.programId;
+      const user = regUser.userId;
+
+      return {
+        name: `${user.firstName} ${user.lastName}`,
+        participantEmail: user.email,
+        programName: program.programName,
+        startDate: program.startDate,
+        endDate: program.endDate,
+        activeStatus: regUser.activeStatus,
+        registrationDate: regUser.registrationDate,
+      };
+    });
+    res.status(200).json(mergedPrograms);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch family programs.",
+    });
   }
 });
 

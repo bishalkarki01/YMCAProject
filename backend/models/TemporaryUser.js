@@ -1,4 +1,10 @@
-/** @format */
+/**
+ * Author : Bishal Karki
+ * Discription: Temporary user is used for the verification purpose of the user registration.
+ * Created : 3 October 2024
+ *
+ * 
+ */
 
 const mongoose = require("mongoose");
 

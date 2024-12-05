@@ -1,3 +1,11 @@
+/**
+ * Author : Bishal Karki // Isabella Breuhl 
+ * Discription:CSS file for admin dashboard
+ * Created : 13 November 2024
+ * Last Modifies: 4  December 2024
+ *
+ * 
+ */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css');
 
@@ -65,7 +73,6 @@
   height: 100vh;
 }
 
-/* Updated main content (container) */
 .container {
   flex-grow: 1;
   padding: 20px;

@@ -1,4 +1,12 @@
-/** @format */
+/**
+ * Author : Bishal Karki
+ * Discription: Routes for user related task 
+ * Created : 13 October 2024
+ * Last Modified : 20 Novermber 2024
+ *
+ * 
+ */
+
 
 const express = require("express");
 const bcrypt = require("bcryptjs");
@@ -39,15 +47,11 @@ router.post("/register", async (req, res) => {
     // Check if email already exists in User collection
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Email is already registered." });
+      return res.status(400).json({
+        success: false,
+        message: "Please choose another email address.",
+      });
     }
-
-    // Log environment variables to check loading
-    console.log("Email:", process.env.EMAIL);
-    console.log("Mongo URI:", process.env.MONGO_URI);
-
     // Save data to TemporaryUser collection
     const tempUser = new TemporaryUser({
       firstName,
@@ -79,6 +83,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
+//Verify endpoint to verify the user's email
 router.post("/verify", async (req, res) => {
   const { email, code } = req.body;
 
@@ -121,12 +126,12 @@ router.post("/verify", async (req, res) => {
   }
 });
 
-// Login route
+// Login endpoint for login
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Step 1: Check if the email is in TemporaryUser collection (pending verification)
+  //Check if the email is in TemporaryUser collection (pending verification)
     const tempUser = await TemporaryUser.findOne({ email });
     if (tempUser) {
       // Generate a new verification code
@@ -151,12 +156,19 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    // Step 2: If not in TemporaryUser, check the User collection for login
+    //If not in TemporaryUser, check the User collection for login
     const user = await User.findOne({ email });
 
     // If the user is not found in User collection
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
+    }
+
+    //Check if the user is verified
+    if (!user.isVerified) {
+      return res.status(403).json({
+        message: "Your account is not verified. Please verify your email.",
+      });
     }
 
     // Compare the entered password with the hashed password in the database
@@ -165,7 +177,7 @@ router.post("/login", async (req, res) => {
       return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    // If the password is correct, generate a token (assuming JWT)
+    // If the password is correct, generate a token
     const token = generateAuthToken(user);
 
     // Return token and user details in the response
@@ -200,6 +212,8 @@ router.get("/protected-route", authenticateToken, (req, res) => {
   });
 });
 
+
+//Logout endpoint to logout
 router.post("/logout", (req, res) => {
   // Check if session exists
   if (req.session) {
@@ -208,16 +222,17 @@ router.post("/logout", (req, res) => {
         console.error("Error destroying session:", err);
         res.status(500).json({ msg: "Failed to log out" });
       } else {
-        res.clearCookie("connect.sid"); // Clear the session cookie
+        // Clear the session cookie
+        res.clearCookie("connect.sid"); 
         res.json({ msg: "ok" });
       }
     });
   } else {
-    // If no session found, still respond as logged out
     res.json({ msg: "No active session" });
   }
 });
 
+//End points to find the member-status where they are active or not
 router.get("/user/member-status", authenticateToken, async (req, res) => {
   try {
     const userId = req.user._id;
@@ -231,15 +246,33 @@ router.get("/user/member-status", authenticateToken, async (req, res) => {
   }
 });
 
+
 // Route to get all users except the logged-in user
 router.get("/getUsers", authenticateToken, async (req, res) => {
   try {
-    const loggedInUserId = req.user._id; // Ensure this is populated by the middleware
+    const loggedInUserId = req.user._id; 
     const users = await User.find({ _id: { $ne: loggedInUserId } });
     res.json(users);
   } catch (error) {
     console.error("Error fetching users:", error);
     res.status(500).json({ error: "Failed to retrieve users." });
+  }
+});
+
+
+//Disable enable user login from the admin
+router.patch("/updateUser/:userId", async (req, res) => {
+  const { userId } = req.params;
+  const { isVerified } = req.body;
+
+  try {
+    await User.findByIdAndUpdate(userId, { isVerified }, { new: true });
+    res
+      .status(200)
+      .json({ success: true, message: "User updated successfully." });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ success: false, message: "Failed to update user." });
   }
 });
 

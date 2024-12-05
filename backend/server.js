@@ -1,5 +1,11 @@
-/** @format */
-
+/**
+ * Author : Bishal Karki
+ * Discription: Routes for user related task 
+ * Created : 2 October 2024
+ * Last Modified : 20 OCtober 2024
+ *
+ * 
+ */
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -27,7 +33,7 @@ db.once("open", () => {
   console.log("Connected to MongoDB");
 });
 
-// Use the user routes
+// Use the routes
 app.use("/", userRoutes);
 app.use("/program", programRoutes);
 

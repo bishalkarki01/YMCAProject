@@ -1,3 +1,11 @@
+/**
+ * Author : Bishal Karki // Isabella Breuhl 
+ * Discription:CSS for login file
+ * Created : 13 November 2024
+ * Last Modifies: 13 November  2024
+ *
+ * 
+ */
 .left {
     display:flex;
     justify-content: center;
@@ -74,7 +82,7 @@ input[type="password"] {
 
 
   /* Button styling */
-  .btn-login, .btn-register {
+  .btn-login, .btn-register, .back-button {
     background-color: #135899;
     color: white;
     border: none;
@@ -134,4 +142,10 @@ input[type="password"] {
   .btn-verify{
     background-color: #135899;
     color : white;
+  }
+
+  .back-button {
+    position: absolute;
+    left: 20px;
+    top: 20px;
   }

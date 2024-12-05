@@ -1,4 +1,11 @@
-/** @format */
+/**
+ * Author : Bishal Karki // Isabella Breuhl 
+ * Discription:Login Page of the application
+ * Created : 13 November 2024
+ * Last Modifies: 13  November 2024
+ *
+ * 
+ */
 
 import axios from "axios";
 import React, { useState } from "react";
@@ -75,6 +82,11 @@ function LoginPage() {
   return (
     <div className="loginPage">
       <div className="left">
+        <Link to="/home">
+          <button className="back-button">
+            <b>Back to Homepage</b>
+          </button>
+        </Link>
         <h1 className="title">Welcome!</h1>
         <h3 className="subtitle">LOGIN TO YOUR ACCOUNT</h3>
         <div className="textbox">

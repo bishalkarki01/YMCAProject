@@ -1,4 +1,11 @@
-/** @format */
+/**
+ * Author : Bishal Karki // Isabella Breuhl
+ * Discription:Main admin dashboard file
+ * Created : 13 November 2024
+ * Last Modifies: 4  December 2024
+ *
+ * 
+ */
 
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -38,7 +45,7 @@ const AdminDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [editingProgramId, setEditingProgramId] = useState(null);
 
-  // Calculate tomorrow's date for minimum date restrictions
+  // Calculate date for minimum date restrictions
   const getTomorrowDate = () => {
     const today = new Date();
     const tomorrow = new Date(today);
@@ -228,36 +235,14 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleLogout = async () => {
-    const confirmLogout = window.confirm("Are you sure you want to log out?");
-    if (confirmLogout) {
-      try {
-        const response = await fetch("http://localhost:5001/logout", {
-          method: "POST",
-          credentials: "include", // Ensure cookies are sent with the request
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const result = await response.json();
-
-        if (result.msg === "ok") {
-          localStorage.removeItem("token");
-          localStorage.removeItem("role");
-          navigate("/login", { replace: true });
-          alert("Logged out successfully!");
-        } else {
-          alert("Failed to log out. Please try again.");
-        }
-      } catch (error) {
-        console.error("Error logging out:", error);
-        alert("An error occurred. Please try again.");
-      }
-    }
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    navigate("/login");
   };
 
   const handleIconClick = (userId) => {
-    setDropdownUserId(dropdownUserId === userId ? null : userId); // Toggle dropdown
+    setDropdownUserId(dropdownUserId === userId ? null : userId);
   };
 
   // Function to handle sending the notice

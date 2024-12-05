@@ -1,4 +1,11 @@
-/** @format */
+/**
+ * Author : Bishal Karki // Isabella Breuhl 
+ * Discription:Registration page of the application
+ * Created : 13 November 2024
+ * Last Modifies: 4  December 2024
+ *
+ * 
+ */
 
 import axios from "axios";
 import React, { useState } from "react";
@@ -49,7 +56,7 @@ function RegistrationPage() {
         userData
       );
       if (response.data.success) {
-        setVerificationModal(true); // Show the verification modal
+        setVerificationModal(true);
       }
     } catch (error) {
       if (error.response && error.response.data.message) {
@@ -70,8 +77,8 @@ function RegistrationPage() {
 
       if (response.data.success) {
         alert("Email verified and registration complete.");
-        setVerificationModal(false); // Close the verification modal
-        navigate("/login"); // Redirect to login
+        setVerificationModal(false);
+        navigate("/login");
       } else {
         setErrorMessage("Invalid verification code.");
       }

@@ -1,4 +1,11 @@
-/** @format */
+/**
+ * Author : Bishal Karki
+ * Discription: Notice model used for for sending and receiving notifcation 
+ * Created : 3 November 2024
+ * Last Modifies: 3  November 2024
+ *
+ * 
+ */
 
 const mongoose = require("mongoose");
 

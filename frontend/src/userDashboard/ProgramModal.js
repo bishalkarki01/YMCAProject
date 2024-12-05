@@ -1,17 +1,29 @@
-/** @format */
-
+/**
+ * Author : Bishal Karki
+ * Discription:Program registration page by the user
+ * Created : 13 November 2024
+ * Last Modifies: 4  December 2024
+ *
+ * 
+ */
 import React, { useState } from "react";
 import "./modal.css";
 
-const ProgramModal = ({ program, onClose }) => {
+const ProgramModal = ({ program, onClose, isAbove18 }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false); // State to track success
+  const [parentEmail, setParentEmail] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const userId = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
 
-  // If userId is null, show an error or redirect
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+  // Redirect if user is not logged in
   if (!userId) {
     console.error("User is not logged in. Redirecting to login...");
     window.location.href = "/login";
@@ -19,6 +31,17 @@ const ProgramModal = ({ program, onClose }) => {
   }
 
   const handleConfirmRegistration = async () => {
+    // Validate parent's email if user is under 18
+    if (!isAbove18 && !parentEmail) {
+      setEmailError("Parent's email is required.");
+      return;
+    }
+
+    if (!isAbove18 && !validateEmail(parentEmail)) {
+      setEmailError("Please enter a valid email address.");
+      return;
+    }
+
     setLoading(true);
     setError(null);
 
@@ -34,8 +57,9 @@ const ProgramModal = ({ program, onClose }) => {
           body: JSON.stringify({
             userId: userId,
             programId: program._id,
+            parentEmail: parentEmail,
             registrationDate: new Date().toISOString(),
-            activeStatus: true, // Sending activeStatus as true
+            activeStatus: true,
           }),
         }
       );
@@ -90,6 +114,25 @@ const ProgramModal = ({ program, onClose }) => {
             <p>
               <strong>Remaining Seats:</strong> {remainingSeats}
             </p>
+
+            {/* Conditional rendering for parent's email */}
+            {!isAbove18 && (
+              <>
+                <h4>Enter your parent's email address:</h4>
+                <input
+                  type="email"
+                  placeholder="Parent's Email"
+                  value={parentEmail}
+                  onChange={(e) => setParentEmail(e.target.value)}
+                  style={{
+                    width: "80%",
+                    padding: "10px",
+                    marginBottom: "10px",
+                  }}
+                />
+                {emailError && <p className="error-message">{emailError}</p>}
+              </>
+            )}
 
             {error && <p className="error-message">{error}</p>}
 

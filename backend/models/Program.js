@@ -1,4 +1,11 @@
-/** @format */
+/**
+ * Author : Bishal Karki
+ * Discription: Program model used for program related task 
+ * Created : 2 October 2024
+ * Last Modifies: 20  November 2024
+ *
+ * 
+ */
 
 const mongoose = require("mongoose");
 

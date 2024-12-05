@@ -1,4 +1,11 @@
-/** @format */
+/**
+ * Author : Bishal Karki
+ * Discription: Middleware to authenticate token for secure login 
+ * Created : 2 October 2024
+ * Last Modifies: 3 December 2024
+ *
+ * 
+ */
 
 const jwt = require("jsonwebtoken");
 
