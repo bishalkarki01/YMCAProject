@@ -15,6 +15,7 @@ import logo from "./logo.jpg";
 import photo1 from "./photo1.png";
 import photo2 from "./photo2.png";
 import photo3 from "./photo3.png";
+import userguide from "./userguide.png";
 import defaultImage from "./YMCA.png";
 import yoga from "./yoga.jpeg";
 
@@ -197,6 +198,38 @@ const HomePage = () => {
             Register Now
           </a>
         </div> */}
+      </section>
+
+
+        {/* Section to Display User Mannual  */}
+        <section style={overlay}>
+        <section
+          className="membership-header"
+          section
+          id="memberships"
+          style={{
+            backgroundImage: `url(${userguide})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            height: "250px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom:"10px"
+          }}>
+      <div className="hero-content">
+  <h1>Need Help?</h1>
+  <p>You can download our user manual here</p>
+  <a 
+    href="./UserManual.pdf" 
+    className="btn-primary" 
+    download="User_Manual.pdf"
+  >
+    Download
+  </a>
+</div>
+
+        </section>
       </section>
 
       {/* Section to Display Membership Info */}
